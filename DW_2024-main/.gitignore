@@ -1,0 +1,7 @@
+.idea
+.ipynb_checkpoints
+ato/content
+.DS_Store
+.content
+.env
+venv
