@@ -1,2 +1,2 @@
 # CITS3201
-Lab work
+This is where all my lab work and project will be at for unit CITS3201
