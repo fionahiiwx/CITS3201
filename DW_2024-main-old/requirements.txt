@@ -6,3 +6,5 @@ psycopg2-binary
 jupyter
 jupyterlab
 pymssql
+dotenv
+atoti

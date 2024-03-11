@@ -18,7 +18,7 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
     return connection
 
 # Connection details
-db_name = "AdventureWorkDW"
+db_name = "AdventureworksDW"
 db_user = "postgres"
 db_password = "1mFu0W=4dk2njy48ge."  # Update with your password
 db_host = "localhost"  # Update if your DB is hosted elsewhere
