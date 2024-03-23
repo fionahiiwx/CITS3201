@@ -1,0 +1,44 @@
+-- DimCountry
+DROP TABLE IF EXISTS DimCountry;
+CREATE TABLE DimCountry (
+    country_id SERIAL PRIMARY KEY,
+    country_name VARCHAR(255) NOT NULL,
+    country_code VARCHAR(3),
+    region VARCHAR(255)
+);
+
+-- DimAthlete
+DROP TABLE IF EXISTS DimAthlete;
+CREATE TABLE DimAthlete (
+    athlete_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    gender VARCHAR(50)
+);
+
+-- DimEvent
+DROP TABLE IF EXISTS DimEvent;
+CREATE TABLE DimEvent (
+    event_id SERIAL PRIMARY KEY,
+    discipline VARCHAR(255) NOT NULL,
+	game_slug VARCHAR(255),
+    event_title VARCHAR(255) NOT NULL
+);
+
+-- DimTime
+DROP TABLE IF EXISTS DimTime;
+CREATE TABLE DimTime (
+    time_id SERIAL PRIMARY KEY,
+    year INT NOT NULL,
+    game_season VARCHAR(50)
+);
+
+-- FactMedalWins
+DROP TABLE IF EXISTS FactMedalWins;
+CREATE TABLE FactMedalWins (
+    medal_win_id SERIAL PRIMARY KEY,
+    country_id INT REFERENCES DimCountry(country_id),
+    athlete_id INT REFERENCES DimAthlete(athlete_id),
+    event_id INT REFERENCES DimEvent(event_id),
+    time_id INT REFERENCES DimTime(time_id),
+    medal_type VARCHAR(50)
+);
