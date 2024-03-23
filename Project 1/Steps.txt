@@ -1,0 +1,17 @@
+1. Create databases (One for source db one for final db in pgAdmin)
+2. Check all the data csv excel that at the end of the rows don't have redundant words (like Windows...), remove them
+3. Change all occurence of 'no data' and '..' in the excel file (or can do this in postgresql later)
+4. Upload src data to docker
+docker cp "C:/path/to/data_file.csv" pgdb:/tmp/data_file.csv
+('pgdb' can double check it is that by using 'docker ps' in vscode)
+Successfully copied 25.1kB to pgdb:/tmp/Economic_data.csv (good to go)
+5. Create tables
+CREATE table_name (
+	var1 type
+)
+6. Populate table 
+- by postgres (I used this)
+	COPY table_name FROM '/tmp/data_file.csv' DELIMITER ',' CSV HEADER;
+- by Import data (this not sure)
+	'Object Explorer>SrcDB>Schemas>public>Tables>table_name(RightClick)>Import/Export data'
+(Make sure u have 7 populated tables by now)

@@ -1,0 +1,175 @@
+-- CREATE Economic table
+DROP TABLE IF EXISTS Economic;
+CREATE TABLE economic (
+    time INT,
+    time_code VARCHAR(10),
+    country_name VARCHAR(255),
+    country_3_letter_code VARCHAR(10),
+    poverty_headcount_ratio VARCHAR(255),
+    gdp_per_capita_current_usd NUMERIC,
+    gdp_per_capita_growth_annual_percent NUMERIC,
+    secure_internet_servers_per_1m_people NUMERIC,
+    mortality_rate_infant_per_1000_live_births NUMERIC,
+    current_health_expenditure_percent_of_gdp NUMERIC,
+    domestic_gov_health_expenditure_per_capita_usd NUMERIC,
+    domestic_private_health_expenditure_per_capita_usd NUMERIC,
+    external_health_expenditure_per_capita_usd NUMERIC
+);
+
+COPY economic FROM '/tmp/Economic_data.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM Economic;
+
+-- #########################################################################
+-- Create OlympicMedals table
+DROP TABLE IF EXISTS OlympicMedals;
+CREATE TABLE olympicmedals (
+    discipline_title VARCHAR(255),
+    slug_game VARCHAR(255),
+    event_title VARCHAR(255),
+    event_gender VARCHAR(50),
+    medal_type VARCHAR(50),
+    participant_type VARCHAR(255),
+    participant_title VARCHAR(255),
+    athlete_url VARCHAR(255),
+    athlete_full_name VARCHAR(255),
+    country_name VARCHAR(255),
+    country_code VARCHAR(10),
+    country_3_letter_code VARCHAR(10)
+);
+
+COPY olympicmedals FROM '/tmp/olympic_medals.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM OlympicMedals;
+
+-- #########################################################################
+-- Create OlympicHosts table
+DROP TABLE IF EXISTS OlympicHosts;
+CREATE TABLE olympichosts (
+    game_slug VARCHAR(255),
+    game_end_date TIMESTAMPTZ,
+    game_start_date TIMESTAMPTZ,
+    game_location VARCHAR(255),
+    game_name VARCHAR(255),
+    game_season VARCHAR(50),
+    game_year INT
+);
+
+COPY olympichosts FROM '/tmp/olympic_hosts.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM OlympicHosts;
+
+-- #########################################################################
+-- Create MentalIllness table
+DROP TABLE IF EXISTS MentalIllness;
+CREATE TABLE mentalillness (
+    entity VARCHAR(255),
+    country_3_letter_code VARCHAR(10),
+    year INT,
+    dalys_from_depressive_disorders_per_100k NUMERIC,
+    dalys_from_schizophrenia_per_100k NUMERIC,
+    dalys_from_bipolar_disorder_per_100k NUMERIC,
+    dalys_from_eating_disorders_per_100k NUMERIC,
+    dalys_from_anxiety_disorders_per_100k NUMERIC
+);
+
+COPY mentalillness FROM '/tmp/mental_illness.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM MentalIllness;
+
+-- #########################################################################
+-- Create ListofCountriesAreasbyContinent table
+DROP TABLE IF EXISTS ListofCountriesAreasbyContinent;
+CREATE TABLE listofcountriesareasbycontinent (
+    country_name VARCHAR(255),
+    region VARCHAR(100)
+);
+
+COPY listofcountriesareasbycontinent FROM '/tmp/list_of_countries_areas_by_continent_2024.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM ListofCountriesAreasbyContinent;
+
+-- #########################################################################
+-- Create LifeExpectancy table
+DROP TABLE IF EXISTS LifeExpectancy;
+CREATE TABLE lifeexpectancy (
+    entity VARCHAR(255),
+    country_3_letter_code VARCHAR(10),
+    year INT,
+    period_life_expectancy_at_birth_all_sexes_age_0 NUMERIC
+);
+
+COPY lifeexpectancy FROM '/tmp/life_expectancy.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM LifeExpectancy;
+
+-- #########################################################################
+-- Create GlobalPopulation table
+DROP TABLE IF EXISTS globalpopulation;
+CREATE TABLE globalpopulation (
+    country TEXT,
+    "1980" DECIMAL(10, 4) NULL,
+    "1981" DECIMAL(10, 4) NULL,
+    "1982" DECIMAL(10, 4) NULL,
+    "1983" DECIMAL(10, 4) NULL,
+    "1984" DECIMAL(10, 4) NULL,
+    "1985" DECIMAL(10, 4) NULL,
+    "1986" DECIMAL(10, 4) NULL,
+    "1987" DECIMAL(10, 4) NULL,
+    "1988" DECIMAL(10, 4) NULL,
+    "1989" DECIMAL(10, 4) NULL,
+    "1990" DECIMAL(10, 4) NULL,
+    "1991" DECIMAL(10, 4) NULL,
+	"1992" DECIMAL(10, 4) NULL,
+	"1993" DECIMAL(10, 4) NULL,
+	"1994" DECIMAL(10, 4) NULL,
+	"1995" DECIMAL(10, 4) NULL,
+	"1996" DECIMAL(10, 4) NULL,
+	"1997" DECIMAL(10, 4) NULL,
+	"1998" DECIMAL(10, 4) NULL,
+	"1999" DECIMAL(10, 4) NULL,
+	"2000" DECIMAL(10, 4) NULL,
+	"2001" DECIMAL(10, 4) NULL,
+	"2002" DECIMAL(10, 4) NULL,
+	"2003" DECIMAL(10, 4) NULL,
+	"2004" DECIMAL(10, 4) NULL,
+	"2005" DECIMAL(10, 4) NULL,
+	"2006" DECIMAL(10, 4) NULL,
+	"2007" DECIMAL(10, 4) NULL,
+	"2008" DECIMAL(10, 4) NULL,
+	"2009" DECIMAL(10, 4) NULL,
+	"2010" DECIMAL(10, 4) NULL,
+	"2011" DECIMAL(10, 4) NULL,
+	"2012" DECIMAL(10, 4) NULL,
+	"2013" DECIMAL(10, 4) NULL,
+	"2014" DECIMAL(10, 4) NULL,
+	"2015" DECIMAL(10, 4) NULL,
+	"2016" DECIMAL(10, 4) NULL,
+	"2017" DECIMAL(10, 4) NULL,
+	"2018" DECIMAL(10, 4) NULL,
+	"2019" DECIMAL(10, 4) NULL,
+	"2020" DECIMAL(10, 4) NULL,
+	"2021" DECIMAL(10, 4) NULL,
+	"2022" DECIMAL(10, 4) NULL,
+	"2023" DECIMAL(10, 4) NULL,
+	"2024" DECIMAL(10, 4) NULL,
+	"2025" DECIMAL(10, 4) NULL,
+	"2026" DECIMAL(10, 4) NULL,
+    "2027" DECIMAL(10, 4) NULL,
+    "2028" DECIMAL(10, 4) NULL
+);
+
+COPY globalpopulation FROM '/tmp/global_population.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM GlobalPopulation;
+
+-- #########################################################################
+-- Create Countries table
+DROP TABLE IF EXISTS Countries;
+CREATE TABLE countries (
+    country_name TEXT UNIQUE NOT NULL,
+    country_code VARCHAR(10),
+    country_3_letter_code VARCHAR(10) UNIQUE
+);
+
+SELECT * FROM Countries;
