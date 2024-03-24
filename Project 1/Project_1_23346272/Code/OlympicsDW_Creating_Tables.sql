@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS FactMedalWins;
+
 -- DimCountry
 DROP TABLE IF EXISTS DimCountry;
 CREATE TABLE DimCountry (
@@ -33,7 +35,6 @@ CREATE TABLE DimTime (
 );
 
 -- FactMedalWins
-DROP TABLE IF EXISTS FactMedalWins;
 CREATE TABLE FactMedalWins (
     medal_win_id SERIAL PRIMARY KEY,
     country_id INT REFERENCES DimCountry(country_id),
