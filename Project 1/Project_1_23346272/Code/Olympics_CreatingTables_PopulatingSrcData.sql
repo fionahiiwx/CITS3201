@@ -17,7 +17,8 @@ CREATE TABLE economic (
     external_health_expenditure_per_capita_usd NUMERIC
 );
 
-COPY economic FROM '/tmp/Economic_data.csv' DELIMITER ',' CSV HEADER;
+COPY economic(time, time_code, country_name, country_3_letter_code, poverty_headcount_ratio, gdp_per_capita_current_usd, gdp_per_capita_growth_annual_percent, secure_internet_servers_per_1m_people, mortality_rate_infant_per_1000_live_births, current_health_expenditure_percent_of_gdp, domestic_gov_health_expenditure_per_capita_usd, domestic_private_health_expenditure_per_capita_usd, external_health_expenditure_per_capita_usd) 
+	FROM '/tmp/Economic_data.csv' DELIMITER ',' CSV HEADER;
 
 SELECT * FROM Economic;
 
@@ -40,7 +41,8 @@ CREATE TABLE olympicmedals (
     country_3_letter_code VARCHAR(10)
 );
 
-COPY olympicmedals FROM '/tmp/olympic_medals.csv' DELIMITER ',' CSV HEADER;
+COPY olympicmedals (discipline_title, slug_game, event_title, event_gender, medal_type, participant_type, participant_title, athlete_url, athlete_full_name, country_name, country_code, country_3_letter_code) 
+	FROM '/tmp/olympic_medals.csv' DELIMITER ',' CSV HEADER;
 
 SELECT * FROM OlympicMedals;
 
@@ -58,7 +60,8 @@ CREATE TABLE olympichosts (
     game_year INT
 );
 
-COPY olympichosts FROM '/tmp/olympic_hosts.csv' DELIMITER ',' CSV HEADER;
+COPY olympichosts (game_slug, game_end_date, game_start_date, game_location, game_name, game_season, game_year)
+	FROM '/tmp/olympic_hosts.csv' DELIMITER ',' CSV HEADER;
 
 SELECT * FROM OlympicHosts;
 
@@ -77,7 +80,8 @@ CREATE TABLE mentalillness (
     dalys_from_anxiety_disorders_per_100k NUMERIC
 );
 
-COPY mentalillness FROM '/tmp/mental_illness.csv' DELIMITER ',' CSV HEADER;
+COPY mentalillness (entity, country_3_letter_code, year, dalys_from_depressive_disorders_per_100k, dalys_from_schizophrenia_per_100k, dalys_from_bipolar_disorder_per_100k, dalys_from_eating_disorders_per_100k, dalys_from_anxiety_disorders_per_100k)
+	FROM '/tmp/mental_illness.csv' DELIMITER ',' CSV HEADER;
 
 SELECT * FROM MentalIllness;
 
@@ -104,13 +108,14 @@ CREATE TABLE lifeexpectancy (
     period_life_expectancy_at_birth_all_sexes_age_0 NUMERIC
 );
 
-COPY lifeexpectancy FROM '/tmp/life_expectancy.csv' DELIMITER ',' CSV HEADER;
+COPY lifeexpectancy (entity, country_3_letter_code, year, period_life_expectancy_at_birth_all_sexes_age_0)
+FROM '/tmp/life_expectancy.csv' DELIMITER ',' CSV HEADER;
 
 SELECT * FROM LifeExpectancy;
 
 -- #########################################################################
 -- Create GlobalPopulation table
-DROP TABLE IF EXISTS GlobalPopulation;
+DROP TABLE IF EXISTS globalpopulation;
 CREATE TABLE globalpopulation (
     country TEXT,
     "1980" DECIMAL(10, 4) NULL,

@@ -1,0 +1,270 @@
+---
+title: "Project 1 Data Visualization"
+author: "Fiona"
+date: "2024-03-25"
+output: html_document
+---
+
+# Import Libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+# Import data
+```{r}
+DimAthlete <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/dimathlete.csv")
+DimCountry <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/dimcountry.csv")
+DimEvent <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/dimevent.csv")
+DimTime <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/dimtime.csv")
+DimHost <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/dimhost.csv")
+FactMedalWins <- read.csv("C:/Fiona Documents/Uni/Yr 3 Sem 2/CITS3201/Project 1/Project_1_23346272/Destination Data/factmedalwins.csv")
+```
+
+# Data Visualisation
+## 1. Which country has won the most medals in a specific discipline over all Olympic Games?
+```{r}
+specific_discipline <- "Wrestling"
+
+# Join FactMedalWins with DimEvent and DimCountry
+medals_by_country_discipline <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimCountry, by = "country_id") %>%
+  filter(discipline == specific_discipline) %>%
+  count(country_name, name = "total_medals") %>%
+  arrange(desc(total_medals))
+
+# Identify top country in specific discipline by total medals
+top_country_wrestling <- medals_by_country_discipline %>%
+  top_n(1, total_medals)
+
+ggplot(medals_by_country_discipline, aes(x = reorder(country_name, total_medals), y = total_medals, fill = country_name)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  theme_minimal() +
+  labs(title = paste("Total Medals by Country in", specific_discipline),
+       x = "Country",
+       y = "Total Medals") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_viridis_d()
+
+ggsave("medals_by_country_discipline.jpg", width = 10, height = 6)
+top_country_wrestling
+```
+
+## 2. Which discipline has gotten the most medals for a specific region for all Olympic Games?
+```{r}
+specific_region <- "Asia"
+
+# Aggregate medals by discipline for specific region
+medals_by_discipline_region <- FactMedalWins %>%
+  inner_join(DimCountry, by = "country_id") %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  filter(region == specific_region) %>%
+  count(discipline, name = "total_medals") %>%
+  arrange(desc(total_medals))
+
+# Identify discipline with most medals in specific region
+top_discipline_region <- medals_by_discipline_region %>%
+  top_n(1, total_medals)
+top_discipline_region
+
+ggplot(medals_by_discipline_region, aes(reorder(discipline, total_medals), total_medals, fill = discipline)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  theme_minimal() +
+  labs(title = paste("Total Medals by Discipline in", specific_region),
+       x = "Discipline",
+       y = "Total Medals") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_viridis_d()
+
+ggsave("medals_by_discipline_region.jpg", width = 10, height = 6)
+medals_by_discipline_region
+```
+
+## 3. How does the medal distribution across gender categories compare within a specific discipline over the latest 3 game years?
+```{r}
+specific_discipline <- "Swimming"
+latest_game_years <- 3
+
+# Find the years of the latest specified Olympic Games in the specified discipline
+medal_distribution <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimAthlete, by = "athlete_id") %>%
+  filter(discipline == specific_discipline) %>%
+  arrange(desc(year)) %>%
+  distinct(year) %>%
+  slice_head(n = latest_game_years)
+
+# List latest specified years
+years_to_include <- medal_distribution %>%
+  pull(year)
+
+# Analyze medal distribution by gender for specified discipline in those years
+medal_distribution <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimAthlete, by = "athlete_id") %>%
+  filter(year %in% years_to_include & discipline == specific_discipline) %>%
+  count(year, gender, name = "total_medals") %>%
+  arrange(year, desc(total_medals))
+
+ggplot(medal_distribution, aes(x = gender, y = total_medals, fill = gender)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = paste("Medal Distribution by Gender in", specific_discipline, "over the last", latest_game_years, "Olympic Games"),
+       x = "Gender",
+       y = "Total Medals") +
+  scale_fill_brewer(palette = "Set3") +
+  facet_wrap(~year) +
+  coord_flip()
+
+ggsave("medals_by_discipline_swimming.jpg", width = 10, height = 6)
+```
+```{r}
+specific_discipline <- "Boxing"
+latest_game_years <- 3
+
+medal_distribution <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimAthlete, by = "athlete_id") %>%
+  filter(discipline == specific_discipline) %>%
+  arrange(desc(year)) %>%
+  distinct(year) %>%
+  slice_head(n = latest_game_years)
+
+years_to_include <- medal_distribution %>%
+  pull(year)
+
+medal_distribution <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimAthlete, by = "athlete_id") %>%
+  filter(year %in% years_to_include & discipline == specific_discipline) %>%
+  count(year, gender, name = "total_medals") %>%
+  arrange(year, desc(total_medals))
+
+ggplot(medal_distribution, aes(x = gender, y = total_medals, fill = gender)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = paste("Medal Distribution by Gender in", specific_discipline, "over the last", latest_game_years, "Olympic Games"),
+       x = "Gender",
+       y = "Total Medals") +
+  scale_fill_brewer(palette = "Set3") +
+  facet_wrap(~year) +
+  coord_flip()
+
+ggsave("medals_by_discipline_boxing.jpg", width = 10, height = 6)
+```
+4. How has the performance (in terms of medals won) of a specific region evolved over specific disciplines?
+```{r}
+specified_region <- "North America"
+specified_discipline <- "Diving"
+specified_region_countries <- DimCountry %>%
+  filter(region == specified_region) %>%
+  dplyr::select(country_id)
+
+# Analyze performance of specified region in specified discipline
+performance_over_time_diving <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimCountry, by = "country_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  filter(country_id %in% specified_region_countries$country_id, discipline == specified_discipline) %>%
+  count(year, name = "total_medals") %>%
+  arrange(year)
+
+# Plotting the performance in Diving over the years
+ggplot(performance_over_time_diving, aes(x = year, y = total_medals)) +
+  geom_line(color = "blue") +
+  geom_point(color = "red") +
+  theme_minimal() +
+  labs(title = paste("Performance of", specified_region, "in", specified_discipline, "Over The Years"),
+       x = "Year",
+       y = "Total Medals") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("performance_of_north_america_in_diving_over_the_years.jpg", width = 10, height = 6)
+```
+
+5. How does hosting the Olympic Games influence the country’s medal tally?
+```{r}
+# Join FactMedalWins with DimHost and DimCountry
+medals_with_hosts <- FactMedalWins %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimHost, by = "host_id") %>%
+  inner_join(DimCountry, by = "country_id")
+
+# Calculate medal tally for hosting countries in years they hosted
+hosting_medal_tally <- medals_with_hosts %>%
+  group_by(host_id, country_id, year) %>%
+  summarise(total_medals = n(), .groups = 'drop')
+
+# Determine overall medal tally for each country
+overall_medal_tally <- FactMedalWins %>%
+  inner_join(DimCountry, by = "country_id") %>%
+  group_by(country_id) %>%
+  summarise(total_medals = n(), .groups = 'drop')
+
+# Join to get country names in the same dataframe
+hosting_medal_tally <- hosting_medal_tally %>%
+  left_join(DimCountry, by = "country_id")
+
+# Compare the medal tallies
+hosting_comparison <- hosting_medal_tally %>%
+  left_join(overall_medal_tally, by = "country_id", suffix = c("_hosting", "_overall")) %>%
+  mutate(difference = total_medals_hosting - (total_medals_overall - total_medals_hosting)) %>%
+  arrange(desc(difference))
+
+# Examine top countries where difference in medal tally is most significant
+top_hosting_impact <- hosting_comparison %>%
+  slice_max(order_by = difference, n = 5)
+
+ggplot(top_hosting_impact, aes(x = reorder(country_name, difference), y = difference, fill = country_name)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Impact of Hosting on Medal Tally",
+       x = "Country",
+       y = "Difference in Medal Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_viridis_d()
+
+ggsave("hosting_impact_on_medals.jpg", width = 10, height = 6)
+```
+6. How does hosting the Olympic Games influence the country’s medal tally in each region?
+```{r}
+# Get FactMedalWins with country, event, and time information
+medals_detailed <- FactMedalWins %>%
+  inner_join(DimEvent, by = "event_id") %>%
+  inner_join(DimTime, by = "time_id") %>%
+  inner_join(DimCountry, by = "country_id")
+
+# Join this detailed medals information with DimHost
+medals_with_hosting_info <- medals_detailed %>%
+  inner_join(DimHost, by = "host_id")
+
+# Flag host years and regions
+medals_flagged_for_hosting <- medals_with_hosting_info %>%
+  mutate(is_host_year = country_name == game_location) %>%
+  group_by(region, year, is_host_year) %>%
+  summarise(total_medals = n(), .groups = 'drop')
+
+# Analyze impact of hosting on medal tallies within each region
+region_hosting_impact <- medals_flagged_for_hosting %>%
+  group_by(region) %>%
+  summarise(host_year_medals = sum(total_medals[is_host_year]),
+            other_years_medals = sum(total_medals[!is_host_year]),
+            difference = abs(host_year_medals - other_years_medals), .groups = 'drop') %>%
+  arrange(desc(difference))
+
+ggplot(region_hosting_impact, aes(x = reorder(region, difference), y = difference, fill = region)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Regional Impact of Hosting on Medal Tallies",
+       x = "Region",
+       y = "Difference in Medal Tally") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Save the plot
+ggsave("regional_impact_of_hosting_on_medals.jpg", width = 10, height = 6)
+```
